@@ -19,10 +19,14 @@ app.use(cors());
 app.use(express.json());
 
 // 路由
+const authRouter = require('./routes/auth');
 const casesRouter = require('./routes/cases');
 const agentRouter = require('./routes/agent');
+const chatRouter = require('./routes/chat');
+app.use('/api/auth', authRouter);
 app.use('/api/cases', casesRouter);
 app.use('/api', agentRouter);
+app.use('/api', chatRouter);
 
 // 健康检查
 app.get('/health', (req, res) => {

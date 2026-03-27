@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import Layout from '../components/Layout';
 
 export default function CaseManager() {
   const [caseType, setCaseType] = useState('');
@@ -10,30 +11,34 @@ export default function CaseManager() {
       agent: 'case_manager',
       type: 'create_case',
       data: { case_type: caseType }
+    }, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     });
     setResult(res.data.result);
   };
 
   return (
-    <div style={{ padding: '40px' }}>
-      <h1>📋 案件管理Agent</h1>
-      <div style={{ marginTop: '20px' }}>
-        <input
-          type="text"
-          placeholder="输入案件类型"
-          value={caseType}
-          onChange={(e) => setCaseType(e.target.value)}
-          style={{ padding: '10px', width: '300px' }}
-        />
-        <button onClick={handleAnalyze} style={{ padding: '10px 20px', marginLeft: '10px' }}>
-          智能分析
-        </button>
-      </div>
-      {result && (
-        <div style={{ marginTop: '20px', padding: '20px', background: '#f5f5f5', borderRadius: '8px' }}>
-          <pre>{result}</pre>
+    <Layout>
+      <div style={{ padding: '40px' }}>
+        <h1>📋 案件管理Agent</h1>
+        <div style={{ marginTop: '20px' }}>
+          <input
+            type="text"
+            placeholder="输入案件类型"
+            value={caseType}
+            onChange={(e) => setCaseType(e.target.value)}
+            style={{ padding: '10px', width: '300px' }}
+          />
+          <button onClick={handleAnalyze} style={{ padding: '10px 20px', marginLeft: '10px' }}>
+            智能分析
+          </button>
         </div>
-      )}
-    </div>
+        {result && (
+          <div style={{ marginTop: '20px', padding: '20px', background: '#f5f5f5', borderRadius: '8px' }}>
+            <pre>{result}</pre>
+          </div>
+        )}
+      </div>
+    </Layout>
   );
 }

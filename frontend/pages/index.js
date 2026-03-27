@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Layout from '../components/Layout';
 
 export default function Home() {
   const agents = [
@@ -15,30 +16,31 @@ export default function Home() {
   ];
 
   return (
-    <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
-      <header style={{ textAlign: 'center', marginBottom: '50px' }}>
-        <h1 style={{ fontSize: '36px', marginBottom: '10px' }}>海南大成律所业务管理平台</h1>
-        <p style={{ fontSize: '18px', color: '#666' }}>基于Agent矩阵的智能化律所管理系统</p>
-      </header>
+    <Layout>
+      <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
+        <header style={{ textAlign: 'center', marginBottom: '50px' }}>
+          <h1 style={{ fontSize: '36px', marginBottom: '10px' }}>Agent矩阵</h1>
+          <p style={{ fontSize: '18px', color: '#666' }}>选择一个Agent开始工作</p>
+        </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-        {agents.map(agent => (
-          <Link href={agent.path} key={agent.name}>
-            <div style={{
-              border: '1px solid #ddd',
-              borderRadius: '8px',
-              padding: '20px',
-              cursor: 'pointer',
-              transition: 'all 0.3s',
-              ':hover': { boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }
-            }}>
-              <div style={{ fontSize: '40px', marginBottom: '10px' }}>{agent.icon}</div>
-              <h3 style={{ marginBottom: '10px' }}>{agent.name}</h3>
-              <p style={{ fontSize: '14px', color: '#666' }}>{agent.desc}</p>
-            </div>
-          </Link>
-        ))}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+          {agents.map(agent => (
+            <Link href={agent.path} key={agent.name}>
+              <div style={{
+                border: '1px solid #ddd',
+                borderRadius: '8px',
+                padding: '20px',
+                cursor: 'pointer',
+                transition: 'all 0.3s'
+              }}>
+                <div style={{ fontSize: '40px', marginBottom: '10px' }}>{agent.icon}</div>
+                <h3 style={{ marginBottom: '10px' }}>{agent.name}</h3>
+                <p style={{ fontSize: '14px', color: '#666' }}>{agent.desc}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 }
