@@ -20,7 +20,9 @@ app.use(express.json());
 
 // 路由
 const casesRouter = require('./routes/cases');
+const agentRouter = require('./routes/agent');
 app.use('/api/cases', casesRouter);
+app.use('/api', agentRouter);
 
 // 健康检查
 app.get('/health', (req, res) => {
