@@ -1,0 +1,5 @@
+p, lawyer, case_private, read
+p, lawyer, case_private, write
+p, partner, case_private, read
+p, partner, case_shared, read
+p, admin, case_shared, read
