@@ -1,12 +1,12 @@
-"""合规检查Agent"""
+"""风险评估Agent"""
 from base_agent import BaseAgent
 
-class ComplianceAgent(BaseAgent):
+class RiskAssessmentAgent(BaseAgent):
     def process(self, task_type, data):
-        if task_type == 'check':
-            business_info = data.get('business_info', '')
+        if task_type == 'assess':
+            case_info = data.get('case_info', '')
             messages = [
-                {'role': 'user', 'content': f'请检查以下业务的合规性：\n{business_info}'}
+                {'role': 'user', 'content': f'请评估以下案件的风险：\n{case_info}'}
             ]
             result = self.client.chat(messages)
             return {'result': result}

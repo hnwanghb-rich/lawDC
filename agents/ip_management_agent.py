@@ -1,12 +1,12 @@
-"""合规检查Agent"""
+"""知识产权Agent"""
 from base_agent import BaseAgent
 
-class ComplianceAgent(BaseAgent):
+class IPManagementAgent(BaseAgent):
     def process(self, task_type, data):
-        if task_type == 'check':
-            business_info = data.get('business_info', '')
+        if task_type == 'analyze':
+            ip_info = data.get('ip_info', '')
             messages = [
-                {'role': 'user', 'content': f'请检查以下业务的合规性：\n{business_info}'}
+                {'role': 'user', 'content': f'请分析以下知识产权信息：\n{ip_info}'}
             ]
             result = self.client.chat(messages)
             return {'result': result}
