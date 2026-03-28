@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Layout from '../components/Layout';
 import axios from 'axios';
 
@@ -6,6 +6,38 @@ export default function Home() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [file, setFile] = useState(null);
+  const [chatWidth, setChatWidth] = useState(400);
+  const dragging = useRef(false);
+  const startX = useRef(0);
+  const startWidth = useRef(0);
+
+  const onMouseDown = useCallback((e) => {
+    dragging.current = true;
+    startX.current = e.clientX;
+    startWidth.current = chatWidth;
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  }, [chatWidth]);
+
+  useEffect(() => {
+    const onMouseMove = (e) => {
+      if (!dragging.current) return;
+      const delta = startX.current - e.clientX;
+      const newWidth = Math.max(280, Math.min(700, startWidth.current + delta));
+      setChatWidth(newWidth);
+    };
+    const onMouseUp = () => {
+      dragging.current = false;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }, []);
 
   const agents = [
     { name: '利冲审核', icon: '⚖️', desc: '利益冲突智能审查' },
@@ -83,8 +115,22 @@ export default function Home() {
           </div>
         </div>
 
+        {/* 拖拽分隔条 */}
+        <div
+          onMouseDown={onMouseDown}
+          style={{
+            width: '5px',
+            cursor: 'col-resize',
+            background: '#ddd',
+            flexShrink: 0,
+            transition: 'background 0.2s'
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = '#10a37f'}
+          onMouseLeave={e => e.currentTarget.style.background = '#ddd'}
+        />
+
         {/* 右侧智能体交流 */}
-        <div style={{ width: '400px', borderLeft: '1px solid #ddd', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ width: `${chatWidth}px`, borderLeft: 'none', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
           <div style={{ padding: '20px', borderBottom: '1px solid #ddd' }}>
             <h3>💬 智能体交流</h3>
           </div>
