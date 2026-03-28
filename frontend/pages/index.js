@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Layout from '../components/Layout';
 import axios from 'axios';
+import { API_BASE_URL } from '../config/api';
 
 export default function Home() {
   const [messages, setMessages] = useState([]);
@@ -55,7 +56,7 @@ export default function Home() {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.post('http://localhost:3000/api/chat/send',
+      const res = await axios.post(`${API_BASE_URL}/api/chat/send`,
         { message: input },
         { headers: { Authorization: `Bearer ${token}` } }
       );
