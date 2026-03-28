@@ -1,44 +1,131 @@
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
+import axios from 'axios';
 
 export default function Home() {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [file, setFile] = useState(null);
+
   const agents = [
-    { name: '案件管理', icon: '📋', path: '/case-manager', desc: '智能立案、流程引擎、工时追踪' },
-    { name: '客户关系', icon: '👥', path: '/crm', desc: '客户画像、需求预测、关系维护' },
-    { name: '文书智能', icon: '📄', path: '/doc-intelligence', desc: '文书生成、合同审查、多语言支持' },
-    { name: '财务效益', icon: '💰', path: '/finance', desc: '智能计费、回款管理、成本核算' },
-    { name: '市场引流', icon: '📈', path: '/marketing', desc: '内容引擎、智能获客、活动管理' },
-    { name: '知识库', icon: '📚', path: '/knowledge', desc: '智能检索、法规追踪、案例图谱' },
-    { name: '合规风控', icon: '🛡️', path: '/compliance', desc: '利益冲突审查、风险评估' },
-    { name: '团队协作', icon: '🤝', path: '/collaboration', desc: '项目空间、智能排期、任务分派' },
-    { name: '数据洞察', icon: '📊', path: '/analytics', desc: '经营仪表盘、业务预测' },
-    { name: '跨境服务', icon: '🌏', path: '/crossborder', desc: '自贸港政策、外资架构设计' }
+    { name: '利冲审核', icon: '⚖️', desc: '利益冲突智能审查' },
+    { name: '文案快读', icon: '📄', desc: '文档快速解读分析' },
+    { name: '尽调助手', icon: '🔍', desc: '尽职调查辅助工具' },
+    { name: '策略助手', icon: '💡', desc: '法律策略智能建议' }
   ];
+
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+
+    const userMsg = { role: 'user', content: input };
+    setMessages([...messages, userMsg]);
+    setInput('');
+
+    try {
+      const token = localStorage.getItem('token');
+      const res = await axios.post('http://localhost:3000/api/chat/send',
+        { message: input },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setMessages(prev => [...prev, { role: 'assistant', content: res.data.data.reply }]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Layout>
-      <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
-        <header style={{ textAlign: 'center', marginBottom: '50px' }}>
-          <h1 style={{ fontSize: '36px', marginBottom: '10px' }}>Agent矩阵</h1>
-          <p style={{ fontSize: '18px', color: '#666' }}>选择一个Agent开始工作</p>
-        </header>
+      <div style={{ display: 'flex', height: '100%' }}>
+        {/* 左侧内容区 */}
+        <div style={{ flex: 1, padding: '30px', overflowY: 'auto' }}>
+          {/* 公司公告滚动条 */}
+          <div style={{ background: '#f0f0f0', padding: '15px', borderRadius: '8px', marginBottom: '30px', overflow: 'hidden' }}>
+            <marquee>📢 公司公告：欢迎使用海南大成律所业务管理平台 | 请及时更新案件进度 | 本周五下午3点全体会议</marquee>
+          </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-          {agents.map(agent => (
-            <Link href={agent.path} key={agent.name}>
-              <div style={{
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                padding: '20px',
-                cursor: 'pointer',
-                transition: 'all 0.3s'
-              }}>
-                <div style={{ fontSize: '40px', marginBottom: '10px' }}>{agent.icon}</div>
-                <h3 style={{ marginBottom: '10px' }}>{agent.name}</h3>
-                <p style={{ fontSize: '14px', color: '#666' }}>{agent.desc}</p>
+          {/* 工作日程安排 */}
+          <div style={{ marginBottom: '30px' }}>
+            <h2 style={{ marginBottom: '15px' }}>📅 工作日程安排</h2>
+            <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '20px' }}>
+              <div style={{ marginBottom: '10px' }}>09:00 - 客户咨询会议</div>
+              <div style={{ marginBottom: '10px' }}>14:00 - 案件讨论</div>
+              <div>16:00 - 文书审核</div>
+            </div>
+          </div>
+
+          {/* 有人找我 */}
+          <div style={{ marginBottom: '30px' }}>
+            <h2 style={{ marginBottom: '15px' }}>💬 有人找我</h2>
+            <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '20px' }}>
+              <div style={{ marginBottom: '15px', paddingBottom: '15px', borderBottom: '1px solid #eee' }}>
+                <strong>陌生客户留言</strong>
+                <div style={{ marginTop: '5px', color: '#666' }}>张先生：咨询合同纠纷案件</div>
               </div>
-            </Link>
-          ))}
+              <div>
+                <strong>同事留言</strong>
+                <div style={{ marginTop: '5px', color: '#666' }}>李律师：请协助审核合同文件</div>
+              </div>
+            </div>
+          </div>
+
+          {/* 智能体矩阵 */}
+          <div>
+            <h2 style={{ marginBottom: '15px' }}>🤖 智能体矩阵</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px' }}>
+              {agents.map(agent => (
+                <div key={agent.name} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '20px', cursor: 'pointer' }}>
+                  <div style={{ fontSize: '30px', marginBottom: '10px' }}>{agent.icon}</div>
+                  <h3>{agent.name}</h3>
+                  <p style={{ fontSize: '14px', color: '#666', marginTop: '5px' }}>{agent.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* 右侧智能体交流 */}
+        <div style={{ width: '400px', borderLeft: '1px solid #ddd', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ padding: '20px', borderBottom: '1px solid #ddd' }}>
+            <h3>💬 智能体交流</h3>
+          </div>
+
+          <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+            {messages.map((msg, i) => (
+              <div key={i} style={{ marginBottom: '15px', textAlign: msg.role === 'user' ? 'right' : 'left' }}>
+                <div style={{
+                  display: 'inline-block',
+                  padding: '10px 15px',
+                  borderRadius: '8px',
+                  background: msg.role === 'user' ? '#10a37f' : '#f0f0f0',
+                  color: msg.role === 'user' ? 'white' : 'black',
+                  maxWidth: '80%'
+                }}>
+                  {msg.content}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ padding: '20px', borderTop: '1px solid #ddd' }}>
+            <input
+              type="file"
+              onChange={(e) => setFile(e.target.files[0])}
+              style={{ marginBottom: '10px', width: '100%' }}
+            />
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                placeholder="输入消息..."
+                style={{ flex: 1, padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}
+              />
+              <button onClick={sendMessage} style={{ padding: '10px 20px', background: '#10a37f', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                发送
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </Layout>

@@ -59,4 +59,33 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// 修改密码
+router.post('/change-password', async (req, res) => {
+  const { userId, oldPassword, newPassword } = req.body;
+
+  if (!newPassword || newPassword.length < 8) {
+    return res.status(400).json({ code: 400, message: '新密码至少8位' });
+  }
+
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ code: 404, message: '用户不存在' });
+    }
+
+    const user = result.rows[0];
+    const valid = await bcrypt.compare(oldPassword, user.password_hash);
+    if (!valid) {
+      return res.status(401).json({ code: 401, message: '原密码错误' });
+    }
+
+    const hash = await bcrypt.hash(newPassword, 10);
+    await pool.query('UPDATE users SET password_hash = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2', [hash, userId]);
+
+    res.json({ code: 200, message: '密码修改成功' });
+  } catch (error) {
+    res.status(500).json({ code: 500, message: error.message });
+  }
+});
+
 module.exports = router;
