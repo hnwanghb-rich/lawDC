@@ -18,22 +18,49 @@ export default function Register() {
     }
   };
 
+  const update = (field) => (e) => setForm({ ...form, [field]: e.target.value });
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: '#f5f5f5', padding: '20px' }}>
-      <div style={{ background: 'white', padding: '40px', borderRadius: '8px', width: '400px' }}>
-        <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>注册账号</h1>
-        <form onSubmit={handleSubmit}>
-          <input type="text" placeholder="用户名" value={form.username} onChange={(e) => setForm({...form, username: e.target.value})} style={{ width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ddd', borderRadius: '4px' }} required />
-          <input type="email" placeholder="邮箱" value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} style={{ width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ddd', borderRadius: '4px' }} required />
-          <input type="password" placeholder="密码（至少8位）" value={form.password} onChange={(e) => setForm({...form, password: e.target.value})} style={{ width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ddd', borderRadius: '4px' }} required />
-          <input type="text" placeholder="姓名" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} style={{ width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ddd', borderRadius: '4px' }} required />
-          <select value={form.role} onChange={(e) => setForm({...form, role: e.target.value})} style={{ width: '100%', padding: '12px', marginBottom: '20px', border: '1px solid #ddd', borderRadius: '4px' }}>
-            <option value="lawyer">律师</option>
-            <option value="partner">合伙人</option>
-          </select>
-          <button type="submit" style={{ width: '100%', padding: '12px', background: '#10a37f', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>注册</button>
-        </form>
-        <p style={{ textAlign: 'center', marginTop: '20px' }}>已有账号？<a href="/login" style={{ color: '#10a37f' }}>登录</a></p>
+    <div className="login-page">
+      <div className="login-card">
+        <div className="login-header">
+          <div className="login-logo">大成</div>
+          <div className="login-title">注册账号</div>
+          <div className="login-subtitle">DACHENG LAW OFFICES · NEW ACCOUNT</div>
+        </div>
+        <div className="login-body">
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label className="form-label">用户名</label>
+              <input type="text" className="form-input" placeholder="请设置用户名" value={form.username} onChange={update('username')} required />
+            </div>
+            <div className="form-group">
+              <label className="form-label">邮箱</label>
+              <input type="email" className="form-input" placeholder="请输入邮箱地址" value={form.email} onChange={update('email')} required />
+            </div>
+            <div className="form-group">
+              <label className="form-label">密码</label>
+              <input type="password" className="form-input" placeholder="至少 8 位字符" value={form.password} onChange={update('password')} required />
+            </div>
+            <div className="form-group">
+              <label className="form-label">姓名</label>
+              <input type="text" className="form-input" placeholder="请输入真实姓名" value={form.name} onChange={update('name')} required />
+            </div>
+            <div className="form-group">
+              <label className="form-label">职位</label>
+              <select className="form-select" value={form.role} onChange={update('role')}>
+                <option value="lawyer">律师</option>
+                <option value="partner">合伙人</option>
+              </select>
+            </div>
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '8px' }}>
+              注册
+            </button>
+          </form>
+          <p className="login-footer-text">
+            已有账号？<a href="/login">立即登录</a>
+          </p>
+        </div>
       </div>
     </div>
   );

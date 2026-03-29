@@ -26,25 +26,39 @@ export default function CrossBorder() {
 
   return (
     <Layout>
-      <div style={{ padding: '40px' }}>
-        <h1>🌏 跨境服务Agent</h1>
-        <div style={{ marginTop: '20px' }}>
-          <input
-            type="text"
-            placeholder="查询自贸港政策"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            style={{ padding: '10px', width: '400px', borderRadius: '4px', border: '1px solid #ddd' }}
-          />
-          <button onClick={handleQuery} disabled={loading} style={{ padding: '10px 20px', marginLeft: '10px', background: '#10a37f', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-            {loading ? '查询中...' : '查询'}
-          </button>
+      <div className="page-container">
+        <div className="page-header">
+          <h1 className="page-title"><span className="page-title-icon" />跨境服务</h1>
+          <p className="page-subtitle">自贸港政策查询与外资架构设计</p>
         </div>
-        {result && (
-          <div style={{ marginTop: '20px', padding: '20px', background: '#f5f5f5', borderRadius: '8px' }}>
-            <pre style={{ whiteSpace: 'pre-wrap' }}>{result}</pre>
+
+        <div className="card">
+          <div className="card-title">自贸港政策查询</div>
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">查询内容</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="输入政策关键词，如：外资准入、税收优惠..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleQuery()}
+              />
+            </div>
+            <div className="form-group" style={{ flexShrink: 0, flexGrow: 0 }}>
+              <label className="form-label">&nbsp;</label>
+              <button onClick={handleQuery} disabled={loading} className="btn btn-primary">
+                {loading ? '查询中...' : '查询'}
+              </button>
+            </div>
           </div>
-        )}
+          {result && (
+            <div className="result-box">
+              <pre>{result}</pre>
+            </div>
+          )}
+        </div>
       </div>
     </Layout>
   );

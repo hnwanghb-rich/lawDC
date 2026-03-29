@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Layout from '../components/Layout';
 import axios from 'axios';
 
 export default function Finance() {
@@ -16,32 +17,50 @@ export default function Finance() {
   };
 
   return (
-    <div style={{ padding: '40px' }}>
-      <h1>💰 财务效益Agent</h1>
-      <div style={{ marginTop: '20px' }}>
-        <input
-          type="number"
-          placeholder="工时（小时）"
-          value={hours}
-          onChange={(e) => setHours(e.target.value)}
-          style={{ padding: '10px', width: '200px' }}
-        />
-        <input
-          type="text"
-          placeholder="案件类型"
-          value={caseType}
-          onChange={(e) => setCaseType(e.target.value)}
-          style={{ padding: '10px', width: '200px', marginLeft: '10px' }}
-        />
-        <button onClick={handleCalculate} style={{ padding: '10px 20px', marginLeft: '10px' }}>
-          计算费用
-        </button>
-      </div>
-      {result && (
-        <div style={{ marginTop: '20px', padding: '20px', background: '#f5f5f5', borderRadius: '8px' }}>
-          <pre>{result}</pre>
+    <Layout>
+      <div className="page-container">
+        <div className="page-header">
+          <h1 className="page-title"><span className="page-title-icon" />财务效益</h1>
+          <p className="page-subtitle">智能计费、回款管理与成本核算</p>
         </div>
-      )}
-    </div>
+
+        <div className="card">
+          <div className="card-title">费用计算</div>
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">工时（小时）</label>
+              <input
+                type="number"
+                className="form-input"
+                placeholder="请输入工时"
+                value={hours}
+                onChange={(e) => setHours(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">案件类型</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="请输入案件类型"
+                value={caseType}
+                onChange={(e) => setCaseType(e.target.value)}
+              />
+            </div>
+            <div className="form-group" style={{ flexShrink: 0, flexGrow: 0 }}>
+              <label className="form-label">&nbsp;</label>
+              <button onClick={handleCalculate} className="btn btn-primary">
+                计算费用
+              </button>
+            </div>
+          </div>
+          {result && (
+            <div className="result-box">
+              <pre>{result}</pre>
+            </div>
+          )}
+        </div>
+      </div>
+    </Layout>
   );
 }

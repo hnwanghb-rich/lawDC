@@ -26,29 +26,32 @@ export default function RiskAssessment() {
 
   return (
     <Layout>
-      <div style={{ padding: '40px' }}>
-        <h1>⚖️ 风险评估Agent</h1>
-        <div style={{ marginTop: '20px' }}>
-          <textarea
-            placeholder="输入案件信息"
-            value={caseInfo}
-            onChange={(e) => setCaseInfo(e.target.value)}
-            style={{ padding: '10px', width: '100%', height: '150px', borderRadius: '4px', border: '1px solid #ddd' }}
-          />
-          <button
-            onClick={handleAssess}
-            disabled={loading}
-            style={{ padding: '10px 20px', marginTop: '10px', background: '#10a37f', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-          >
+      <div className="page-container">
+        <div className="page-header">
+          <h1 className="page-title"><span className="page-title-icon" />风险评估</h1>
+          <p className="page-subtitle">案件胜诉概率分析与法律风险量化评估</p>
+        </div>
+
+        <div className="card">
+          <div className="card-title">风险评估分析</div>
+          <div className="form-group">
+            <label className="form-label">案件信息</label>
+            <textarea
+              className="form-textarea"
+              placeholder="输入案件基本情况、证据材料、法律关系等..."
+              value={caseInfo}
+              onChange={(e) => setCaseInfo(e.target.value)}
+            />
+          </div>
+          <button onClick={handleAssess} disabled={loading} className="btn btn-primary">
             {loading ? '评估中...' : '风险评估'}
           </button>
+          {result && (
+            <div className="result-box">
+              <pre>{JSON.stringify(result, null, 2)}</pre>
+            </div>
+          )}
         </div>
-        {result && (
-          <div style={{ marginTop: '20px', padding: '20px', background: '#f5f5f5', borderRadius: '8px' }}>
-            <h3>评估报告</h3>
-            <pre style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(result, null, 2)}</pre>
-          </div>
-        )}
       </div>
     </Layout>
   );

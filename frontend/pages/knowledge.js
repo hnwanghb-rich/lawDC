@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Layout from '../components/Layout';
 import axios from 'axios';
 
 export default function Knowledge() {
@@ -15,25 +16,41 @@ export default function Knowledge() {
   };
 
   return (
-    <div style={{ padding: '40px' }}>
-      <h1>📚 知识库Agent</h1>
-      <div style={{ marginTop: '20px' }}>
-        <input
-          type="text"
-          placeholder="搜索法律知识"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          style={{ padding: '10px', width: '400px' }}
-        />
-        <button onClick={handleSearch} style={{ padding: '10px 20px', marginLeft: '10px' }}>
-          搜索
-        </button>
-      </div>
-      {result && (
-        <div style={{ marginTop: '20px', padding: '20px', background: '#f5f5f5', borderRadius: '8px' }}>
-          <pre>{result}</pre>
+    <Layout>
+      <div className="page-container">
+        <div className="page-header">
+          <h1 className="page-title"><span className="page-title-icon" />知识库</h1>
+          <p className="page-subtitle">智能检索法律知识、法规追踪与案例图谱</p>
         </div>
-      )}
-    </div>
+
+        <div className="card">
+          <div className="card-title">法律知识检索</div>
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">检索关键词</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="输入法律条文、案例关键词..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              />
+            </div>
+            <div className="form-group" style={{ flexShrink: 0, flexGrow: 0 }}>
+              <label className="form-label">&nbsp;</label>
+              <button onClick={handleSearch} className="btn btn-primary">
+                检索
+              </button>
+            </div>
+          </div>
+          {result && (
+            <div className="result-box">
+              <pre>{result}</pre>
+            </div>
+          )}
+        </div>
+      </div>
+    </Layout>
   );
 }

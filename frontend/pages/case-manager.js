@@ -26,25 +26,38 @@ export default function CaseManager() {
 
   return (
     <Layout>
-      <div style={{ padding: '40px' }}>
-        <h1>📋 案件管理Agent</h1>
-        <div style={{ marginTop: '20px' }}>
-          <input
-            type="text"
-            placeholder="输入案件类型"
-            value={caseType}
-            onChange={(e) => setCaseType(e.target.value)}
-            style={{ padding: '10px', width: '300px', borderRadius: '4px', border: '1px solid #ddd' }}
-          />
-          <button onClick={handleAnalyze} disabled={loading} style={{ padding: '10px 20px', marginLeft: '10px', background: '#10a37f', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-            {loading ? '分析中...' : '智能分析'}
-          </button>
+      <div className="page-container">
+        <div className="page-header">
+          <h1 className="page-title"><span className="page-title-icon" />案件管理</h1>
+          <p className="page-subtitle">智能立案、流程引擎与工时追踪</p>
         </div>
-        {result && (
-          <div style={{ marginTop: '20px', padding: '20px', background: '#f5f5f5', borderRadius: '8px' }}>
-            <pre style={{ whiteSpace: 'pre-wrap' }}>{result}</pre>
+
+        <div className="card">
+          <div className="card-title">智能立案分析</div>
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">案件类型</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="输入案件类型（如：合同纠纷、知识产权等）"
+                value={caseType}
+                onChange={(e) => setCaseType(e.target.value)}
+              />
+            </div>
+            <div className="form-group" style={{ flexShrink: 0, flexGrow: 0 }}>
+              <label className="form-label">&nbsp;</label>
+              <button onClick={handleAnalyze} disabled={loading} className="btn btn-primary">
+                {loading ? '分析中...' : '智能分析'}
+              </button>
+            </div>
           </div>
-        )}
+          {result && (
+            <div className="result-box">
+              <pre>{result}</pre>
+            </div>
+          )}
+        </div>
       </div>
     </Layout>
   );

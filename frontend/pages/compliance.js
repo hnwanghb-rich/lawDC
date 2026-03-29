@@ -26,25 +26,32 @@ export default function Compliance() {
 
   return (
     <Layout>
-      <div style={{ padding: '40px' }}>
-        <h1>🔍 合规检查Agent</h1>
-        <div style={{ marginTop: '20px' }}>
-          <textarea
-            placeholder="输入业务信息"
-            value={businessInfo}
-            onChange={(e) => setBusinessInfo(e.target.value)}
-            style={{ padding: '10px', width: '100%', height: '150px', borderRadius: '4px', border: '1px solid #ddd' }}
-          />
-          <button onClick={handleCheck} disabled={loading} style={{ padding: '10px 20px', marginTop: '10px', background: '#10a37f', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+      <div className="page-container">
+        <div className="page-header">
+          <h1 className="page-title"><span className="page-title-icon" />合规风控</h1>
+          <p className="page-subtitle">利益冲突审查与合规风险评估</p>
+        </div>
+
+        <div className="card">
+          <div className="card-title">合规检查</div>
+          <div className="form-group">
+            <label className="form-label">业务信息</label>
+            <textarea
+              className="form-textarea"
+              placeholder="输入业务信息，包括交易结构、当事方、业务背景等..."
+              value={businessInfo}
+              onChange={(e) => setBusinessInfo(e.target.value)}
+            />
+          </div>
+          <button onClick={handleCheck} disabled={loading} className="btn btn-primary">
             {loading ? '检查中...' : '合规检查'}
           </button>
+          {result && (
+            <div className="result-box">
+              <pre>{JSON.stringify(result, null, 2)}</pre>
+            </div>
+          )}
         </div>
-        {result && (
-          <div style={{ marginTop: '20px', padding: '20px', background: '#f5f5f5', borderRadius: '8px' }}>
-            <h3>检查报告</h3>
-            <pre style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(result, null, 2)}</pre>
-          </div>
-        )}
       </div>
     </Layout>
   );

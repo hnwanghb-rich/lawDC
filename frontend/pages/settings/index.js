@@ -3,10 +3,10 @@ import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 
 const AGENTS = [
-  { id: 'conflict', name: '利冲审核', icon: '⚖️', desc: '利益冲突智能审查，自动比对当事人信息' },
-  { id: 'docread',  name: '文案快读', icon: '📄', desc: '文档快速解读分析，提炼关键条款' },
-  { id: 'duedilig', name: '尽调助手', icon: '🔍', desc: '尽职调查辅助，自动生成调查报告' },
-  { id: 'strategy', name: '策略助手', icon: '💡', desc: '法律策略智能建议，案件胜诉分析' },
+  { id: 'conflict', name: '利冲审核', desc: '利益冲突智能审查，自动比对当事人信息' },
+  { id: 'docread',  name: '文案快读', desc: '文档快速解读分析，提炼关键条款' },
+  { id: 'duedilig', name: '尽调助手', desc: '尽职调查辅助，自动生成调查报告' },
+  { id: 'strategy', name: '策略助手', desc: '法律策略智能建议，案件胜诉分析' },
 ];
 
 export default function Settings() {
@@ -26,66 +26,48 @@ export default function Settings() {
   };
 
   const menuItems = [
-    { label: '个人信息', icon: '👤', path: '/settings/profile' },
-    { label: '行程表',   icon: '📅', path: '/settings/schedule' },
-    { label: '修改密码', icon: '🔒', path: '/change-password' },
-    { label: '智能体选择', icon: '🤖', action: () => setShowAgentPicker(true) },
+    { label: '个人信息', desc: '查看和编辑个人资料', path: '/settings/profile' },
+    { label: '行程表',   desc: '管理日程与会议安排', path: '/settings/schedule' },
+    { label: '修改密码', desc: '更新账户登录密码', path: '/change-password' },
+    { label: '智能体选择', desc: activeAgent ? `当前：${activeAgent.name}` : '选择默认聊天智能体', action: () => setShowAgentPicker(true) },
   ];
 
   return (
     <Layout>
-      <div style={{ padding: '40px', maxWidth: '800px' }}>
-        <h1 style={{ marginBottom: '30px' }}>控制台</h1>
+      <div className="page-container">
+        <div className="page-header">
+          <h1 className="page-title"><span className="page-title-icon" />控制台</h1>
+          <p className="page-subtitle">个人设置与系统配置</p>
+        </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+        <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
           {menuItems.map(item => (
             <div
               key={item.label}
               onClick={() => item.action ? item.action() : router.push(item.path)}
-              style={{
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                padding: '24px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px',
-                transition: 'box-shadow 0.2s'
-              }}
-              onMouseEnter={e => e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)'}
-              onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
+              className="card"
+              style={{ cursor: 'pointer', marginBottom: 0, transition: 'box-shadow 0.2s, border-color 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; e.currentTarget.style.borderColor = 'var(--color-border-light)'; }}
             >
-              <span style={{ fontSize: '32px' }}>{item.icon}</span>
-              <div>
-                <div style={{ fontWeight: 600 }}>{item.label}</div>
-                {item.label === '智能体选择' && activeAgent && (
-                  <div style={{ fontSize: '13px', color: '#10a37f', marginTop: '4px' }}>
-                    当前：{activeAgent.icon} {activeAgent.name}
-                  </div>
-                )}
-              </div>
+              <div style={{ fontFamily: 'var(--font-serif)', fontSize: '15px', fontWeight: 600, color: 'var(--color-primary)', marginBottom: '6px' }}>{item.label}</div>
+              <div style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>{item.desc}</div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* 智能体选择弹窗 */}
       {showAgentPicker && (
         <div
           onClick={() => setShowAgentPicker(false)}
-          style={{
-            position: 'fixed', inset: 0,
-            background: 'rgba(0,0,0,0.4)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            zIndex: 1000
-          }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(26,39,68,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
         >
           <div
             onClick={e => e.stopPropagation()}
-            style={{ background: 'white', borderRadius: '12px', padding: '30px', width: '500px' }}
+            style={{ background: 'white', borderRadius: 'var(--radius-lg)', padding: '36px', width: '520px', boxShadow: 'var(--shadow-lg)' }}
           >
-            <h2 style={{ marginBottom: '20px' }}>选择聊天智能体</h2>
-            <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>
+            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', color: 'var(--color-primary)', marginBottom: '8px' }}>选择聊天智能体</h2>
+            <p style={{ color: 'var(--color-text-secondary)', marginBottom: '24px', fontSize: '13.5px' }}>
               选中的智能体将作为所有页面聊天窗口的处理工具
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
@@ -94,27 +76,23 @@ export default function Settings() {
                   key={agent.id}
                   onClick={() => selectAgent(agent)}
                   style={{
-                    border: `2px solid ${activeAgent?.id === agent.id ? '#10a37f' : '#ddd'}`,
-                    borderRadius: '8px',
-                    padding: '16px',
+                    border: `2px solid ${activeAgent?.id === agent.id ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                    borderRadius: 'var(--radius-md)',
+                    padding: '18px',
                     cursor: 'pointer',
-                    background: activeAgent?.id === agent.id ? '#f0faf7' : 'white',
+                    background: activeAgent?.id === agent.id ? '#fdf8ee' : 'white',
                     transition: 'all 0.15s'
                   }}
                 >
-                  <div style={{ fontSize: '28px', marginBottom: '8px' }}>{agent.icon}</div>
-                  <div style={{ fontWeight: 600, marginBottom: '4px' }}>{agent.name}</div>
-                  <div style={{ fontSize: '12px', color: '#666' }}>{agent.desc}</div>
+                  <div style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, color: 'var(--color-primary)', marginBottom: '5px' }}>{agent.name}</div>
+                  <div style={{ fontSize: '12.5px', color: 'var(--color-text-secondary)' }}>{agent.desc}</div>
                   {activeAgent?.id === agent.id && (
-                    <div style={{ marginTop: '8px', color: '#10a37f', fontSize: '12px', fontWeight: 600 }}>✓ 当前使用</div>
+                    <div style={{ marginTop: '8px', color: 'var(--color-accent)', fontSize: '12px', fontWeight: 600 }}>✓ 当前使用</div>
                   )}
                 </div>
               ))}
             </div>
-            <button
-              onClick={() => setShowAgentPicker(false)}
-              style={{ marginTop: '20px', padding: '10px 24px', background: '#f0f0f0', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
-            >
+            <button onClick={() => setShowAgentPicker(false)} className="btn btn-outline btn-sm" style={{ marginTop: '20px' }}>
               关闭
             </button>
           </div>

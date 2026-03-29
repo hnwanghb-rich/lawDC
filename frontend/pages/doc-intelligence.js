@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Layout from '../components/Layout';
 import axios from 'axios';
 
 export default function DocIntelligence() {
@@ -16,29 +17,49 @@ export default function DocIntelligence() {
   };
 
   return (
-    <div style={{ padding: '40px' }}>
-      <h1>📄 文书智能Agent</h1>
-      <div style={{ marginTop: '20px' }}>
-        <select value={docType} onChange={(e) => setDocType(e.target.value)} style={{ padding: '10px', width: '200px' }}>
-          <option>起诉状</option>
-          <option>答辩状</option>
-          <option>合同</option>
-        </select>
-        <textarea
-          placeholder="输入案件信息"
-          value={caseInfo}
-          onChange={(e) => setCaseInfo(e.target.value)}
-          style={{ padding: '10px', width: '100%', height: '100px', marginTop: '10px' }}
-        />
-        <button onClick={handleGenerate} style={{ padding: '10px 20px', marginTop: '10px' }}>
-          生成文书
-        </button>
-      </div>
-      {result && (
-        <div style={{ marginTop: '20px', padding: '20px', background: '#f5f5f5', borderRadius: '8px' }}>
-          <pre>{result}</pre>
+    <Layout>
+      <div className="page-container">
+        <div className="page-header">
+          <h1 className="page-title"><span className="page-title-icon" />文书智能</h1>
+          <p className="page-subtitle">智能生成法律文书、合同审查与多语言支持</p>
         </div>
-      )}
-    </div>
+
+        <div className="card">
+          <div className="card-title">文书生成</div>
+          <div className="form-group">
+            <label className="form-label">文书类型</label>
+            <select
+              className="form-select"
+              value={docType}
+              onChange={(e) => setDocType(e.target.value)}
+              style={{ maxWidth: '240px' }}
+            >
+              <option>起诉状</option>
+              <option>答辩状</option>
+              <option>合同</option>
+              <option>法律意见书</option>
+              <option>仲裁申请书</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="form-label">案件信息</label>
+            <textarea
+              className="form-textarea"
+              placeholder="请输入案件基本信息，包括当事人、事实经过、诉求等..."
+              value={caseInfo}
+              onChange={(e) => setCaseInfo(e.target.value)}
+            />
+          </div>
+          <button onClick={handleGenerate} className="btn btn-primary">
+            生成文书
+          </button>
+          {result && (
+            <div className="result-box">
+              <pre>{result}</pre>
+            </div>
+          )}
+        </div>
+      </div>
+    </Layout>
   );
 }

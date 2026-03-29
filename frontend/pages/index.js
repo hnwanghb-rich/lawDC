@@ -6,8 +6,7 @@ import { API_BASE_URL } from '../config/api';
 export default function Home() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [file, setFile] = useState(null);
-  const [chatWidth, setChatWidth] = useState(400);
+  const [chatWidth, setChatWidth] = useState(360);
   const dragging = useRef(false);
   const startX = useRef(0);
   const startWidth = useRef(0);
@@ -24,7 +23,7 @@ export default function Home() {
     const onMouseMove = (e) => {
       if (!dragging.current) return;
       const delta = startX.current - e.clientX;
-      const newWidth = Math.max(280, Math.min(700, startWidth.current + delta));
+      const newWidth = Math.max(280, Math.min(680, startWidth.current + delta));
       setChatWidth(newWidth);
     };
     const onMouseUp = () => {
@@ -41,19 +40,17 @@ export default function Home() {
   }, []);
 
   const agents = [
-    { name: '利冲审核', icon: '⚖️', desc: '利益冲突智能审查' },
-    { name: '文案快读', icon: '📄', desc: '文档快速解读分析' },
-    { name: '尽调助手', icon: '🔍', desc: '尽职调查辅助工具' },
-    { name: '策略助手', icon: '💡', desc: '法律策略智能建议' }
+    { name: '利冲审核', desc: '利益冲突智能审查' },
+    { name: '文案快读', desc: '文档快速解读分析' },
+    { name: '尽调助手', desc: '尽职调查辅助工具' },
+    { name: '策略助手', desc: '法律策略智能建议' },
   ];
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-
     const userMsg = { role: 'user', content: input };
     setMessages([...messages, userMsg]);
     setInput('');
-
     try {
       const token = localStorage.getItem('token');
       const res = await axios.post(`${API_BASE_URL}/api/chat/send`,
@@ -68,48 +65,52 @@ export default function Home() {
 
   return (
     <Layout>
-      <div style={{ display: 'flex', height: '100%' }}>
+      <div className="dashboard">
         {/* 左侧内容区 */}
-        <div style={{ flex: 1, padding: '30px', overflowY: 'auto' }}>
-          {/* 公司公告滚动条 */}
-          <div style={{ background: '#f0f0f0', padding: '15px', borderRadius: '8px', marginBottom: '30px', overflow: 'hidden' }}>
-            <marquee>📢 公司公告：欢迎使用海南大成律所业务管理平台 | 请及时更新案件进度 | 本周五下午3点全体会议</marquee>
+        <div className="dashboard-main">
+          <div className="announce-bar">
+            <marquee>公告：欢迎使用大成律所业务管理平台 &nbsp;|&nbsp; 请及时更新案件进度 &nbsp;|&nbsp; 本周五下午 15:00 全体会议</marquee>
           </div>
 
-          {/* 工作日程安排 */}
-          <div style={{ marginBottom: '30px' }}>
-            <h2 style={{ marginBottom: '15px' }}>📅 工作日程安排</h2>
-            <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '20px' }}>
-              <div style={{ marginBottom: '10px' }}>09:00 - 客户咨询会议</div>
-              <div style={{ marginBottom: '10px' }}>14:00 - 案件讨论</div>
-              <div>16:00 - 文书审核</div>
-            </div>
-          </div>
-
-          {/* 有人找我 */}
-          <div style={{ marginBottom: '30px' }}>
-            <h2 style={{ marginBottom: '15px' }}>💬 有人找我</h2>
-            <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '20px' }}>
-              <div style={{ marginBottom: '15px', paddingBottom: '15px', borderBottom: '1px solid #eee' }}>
-                <strong>陌生客户留言</strong>
-                <div style={{ marginTop: '5px', color: '#666' }}>张先生：咨询合同纠纷案件</div>
+          <div style={{ marginBottom: '28px' }}>
+            <div className="section-title">工作日程安排</div>
+            <div className="schedule-list">
+              <div className="schedule-item">
+                <span className="schedule-time">09:00</span>
+                <span>客户咨询会议</span>
               </div>
-              <div>
-                <strong>同事留言</strong>
-                <div style={{ marginTop: '5px', color: '#666' }}>李律师：请协助审核合同文件</div>
+              <div className="schedule-item">
+                <span className="schedule-time">14:00</span>
+                <span>案件讨论</span>
+              </div>
+              <div className="schedule-item">
+                <span className="schedule-time">16:00</span>
+                <span>文书审核</span>
               </div>
             </div>
           </div>
 
-          {/* 智能体矩阵 */}
+          <div style={{ marginBottom: '28px' }}>
+            <div className="section-title">有人找我</div>
+            <div className="message-list">
+              <div className="message-item">
+                <div className="message-sender">陌生客户留言</div>
+                <div className="message-content">张先生：咨询合同纠纷案件</div>
+              </div>
+              <div className="message-item">
+                <div className="message-sender">同事留言</div>
+                <div className="message-content">李律师：请协助审核合同文件</div>
+              </div>
+            </div>
+          </div>
+
           <div>
-            <h2 style={{ marginBottom: '15px' }}>🤖 智能体矩阵</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px' }}>
+            <div className="section-title">智能体矩阵</div>
+            <div className="agent-grid">
               {agents.map(agent => (
-                <div key={agent.name} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '20px', cursor: 'pointer' }}>
-                  <div style={{ fontSize: '30px', marginBottom: '10px' }}>{agent.icon}</div>
-                  <h3>{agent.name}</h3>
-                  <p style={{ fontSize: '14px', color: '#666', marginTop: '5px' }}>{agent.desc}</p>
+                <div key={agent.name} className="agent-card">
+                  <div className="agent-card-name">{agent.name}</div>
+                  <div className="agent-card-desc">{agent.desc}</div>
                 </div>
               ))}
             </div>
@@ -117,58 +118,37 @@ export default function Home() {
         </div>
 
         {/* 拖拽分隔条 */}
-        <div
-          onMouseDown={onMouseDown}
-          style={{
-            width: '5px',
-            cursor: 'col-resize',
-            background: '#ddd',
-            flexShrink: 0,
-            transition: 'background 0.2s'
-          }}
-          onMouseEnter={e => e.currentTarget.style.background = '#10a37f'}
-          onMouseLeave={e => e.currentTarget.style.background = '#ddd'}
-        />
+        <div className="chat-resize-handle" onMouseDown={onMouseDown} />
 
         {/* 右侧智能体交流 */}
-        <div style={{ width: `${chatWidth}px`, borderLeft: 'none', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
-          <div style={{ padding: '20px', borderBottom: '1px solid #ddd' }}>
-            <h3>💬 智能体交流</h3>
-          </div>
-
-          <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+        <div className="dashboard-chat" style={{ width: `${chatWidth}px` }}>
+          <div className="chat-header">智能体交流</div>
+          <div className="chat-messages">
+            {messages.length === 0 && (
+              <div className="empty-state">
+                <div className="empty-state-text">向智能体发送消息开始对话</div>
+              </div>
+            )}
             {messages.map((msg, i) => (
-              <div key={i} style={{ marginBottom: '15px', textAlign: msg.role === 'user' ? 'right' : 'left' }}>
-                <div style={{
-                  display: 'inline-block',
-                  padding: '10px 15px',
-                  borderRadius: '8px',
-                  background: msg.role === 'user' ? '#10a37f' : '#f0f0f0',
-                  color: msg.role === 'user' ? 'white' : 'black',
-                  maxWidth: '80%'
-                }}>
-                  {msg.content}
-                </div>
+              <div
+                key={i}
+                className={`chat-bubble ${msg.role === 'user' ? 'chat-bubble-user' : 'chat-bubble-assistant'}`}
+              >
+                {msg.content}
               </div>
             ))}
           </div>
-
-          <div style={{ padding: '20px', borderTop: '1px solid #ddd' }}>
-            <input
-              type="file"
-              onChange={(e) => setFile(e.target.files[0])}
-              style={{ marginBottom: '10px', width: '100%' }}
-            />
-            <div style={{ display: 'flex', gap: '10px' }}>
+          <div className="chat-input-area">
+            <div className="chat-input-row">
               <input
                 type="text"
+                className="form-input"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                placeholder="输入消息..."
-                style={{ flex: 1, padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}
+                placeholder="输入消息，按 Enter 发送"
               />
-              <button onClick={sendMessage} style={{ padding: '10px 20px', background: '#10a37f', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+              <button onClick={sendMessage} className="btn btn-primary" style={{ flexShrink: 0 }}>
                 发送
               </button>
             </div>

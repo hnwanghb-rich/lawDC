@@ -26,29 +26,32 @@ export default function LegalResearch() {
 
   return (
     <Layout>
-      <div style={{ padding: '40px' }}>
-        <h1>📚 法律研究Agent</h1>
-        <div style={{ marginTop: '20px' }}>
-          <textarea
-            placeholder="输入法律问题或案例关键词"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            style={{ padding: '10px', width: '100%', height: '100px', borderRadius: '4px', border: '1px solid #ddd' }}
-          />
-          <button
-            onClick={handleSearch}
-            disabled={loading}
-            style={{ padding: '10px 20px', marginTop: '10px', background: '#10a37f', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-          >
-            {loading ? '搜索中...' : '智能检索'}
-          </button>
+      <div className="page-container">
+        <div className="page-header">
+          <h1 className="page-title"><span className="page-title-icon" />法律研究</h1>
+          <p className="page-subtitle">智能检索法律法规、司法解释与典型案例</p>
         </div>
-        {result && (
-          <div style={{ marginTop: '20px', padding: '20px', background: '#f5f5f5', borderRadius: '8px' }}>
-            <h3>检索结果</h3>
-            <pre style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(result, null, 2)}</pre>
+
+        <div className="card">
+          <div className="card-title">法律问题检索</div>
+          <div className="form-group">
+            <label className="form-label">检索内容</label>
+            <textarea
+              className="form-textarea"
+              placeholder="输入法律问题或案例关键词，支持自然语言描述..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
           </div>
-        )}
+          <button onClick={handleSearch} disabled={loading} className="btn btn-primary">
+            {loading ? '检索中...' : '智能检索'}
+          </button>
+          {result && (
+            <div className="result-box">
+              <pre>{JSON.stringify(result, null, 2)}</pre>
+            </div>
+          )}
+        </div>
       </div>
     </Layout>
   );

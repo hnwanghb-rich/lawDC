@@ -27,31 +27,46 @@ export default function DocumentDraft() {
 
   return (
     <Layout>
-      <div style={{ padding: '40px' }}>
-        <h1>✍️ 文书起草Agent</h1>
-        <div style={{ marginTop: '20px' }}>
-          <select value={docType} onChange={(e) => setDocType(e.target.value)} style={{ width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '4px', border: '1px solid #ddd' }}>
-            <option value="">选择文书类型</option>
-            <option value="complaint">起诉状</option>
-            <option value="defense">答辩状</option>
-            <option value="appeal">上诉状</option>
-          </select>
-          <textarea
-            placeholder="输入案件参数"
-            value={params}
-            onChange={(e) => setParams(e.target.value)}
-            style={{ padding: '10px', width: '100%', height: '120px', borderRadius: '4px', border: '1px solid #ddd' }}
-          />
-          <button onClick={handleDraft} disabled={loading} style={{ padding: '10px 20px', marginTop: '10px', background: '#10a37f', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+      <div className="page-container">
+        <div className="page-header">
+          <h1 className="page-title"><span className="page-title-icon" />文书起草</h1>
+          <p className="page-subtitle">智能起草诉讼文书、法律意见书等各类法律文件</p>
+        </div>
+
+        <div className="card">
+          <div className="card-title">文书起草</div>
+          <div className="form-group">
+            <label className="form-label">文书类型</label>
+            <select
+              className="form-select"
+              value={docType}
+              onChange={(e) => setDocType(e.target.value)}
+              style={{ maxWidth: '240px' }}
+            >
+              <option value="">请选择文书类型</option>
+              <option value="complaint">起诉状</option>
+              <option value="defense">答辩状</option>
+              <option value="appeal">上诉状</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="form-label">案件参数</label>
+            <textarea
+              className="form-textarea"
+              placeholder="输入案件相关参数，包括当事人信息、事实经过、诉讼请求等..."
+              value={params}
+              onChange={(e) => setParams(e.target.value)}
+            />
+          </div>
+          <button onClick={handleDraft} disabled={loading} className="btn btn-primary">
             {loading ? '生成中...' : '智能起草'}
           </button>
+          {result && (
+            <div className="result-box">
+              <pre>{JSON.stringify(result, null, 2)}</pre>
+            </div>
+          )}
         </div>
-        {result && (
-          <div style={{ marginTop: '20px', padding: '20px', background: '#f5f5f5', borderRadius: '8px' }}>
-            <h3>生成文书</h3>
-            <pre style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(result, null, 2)}</pre>
-          </div>
-        )}
       </div>
     </Layout>
   );
