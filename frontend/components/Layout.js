@@ -40,59 +40,69 @@ export default function Layout({ children }) {
 
   return (
     <div className="app-shell">
-      {/* 侧边栏 */}
-      <aside className="sidebar">
-        <div className="sidebar-brand">
-          <Link href="/" className="sidebar-brand-link">
-            <div className="sidebar-logo">大成</div>
-            <div>
-              <div className="sidebar-name">大成律师事务所</div>
-              <div className="sidebar-sub">业务管理平台</div>
-            </div>
-          </Link>
+      {/* 顶部 Banner */}
+      <header className="top-banner">
+        <div className="top-banner-inner">
+          <img
+            src="/logo.png"
+            alt="海南大成所"
+            className="top-banner-logo"
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+          <div className="top-banner-text">
+            <span className="top-banner-title">海南大成所AI矩阵办公平台</span>
+          </div>
         </div>
+        <div className="top-banner-user">
+          <span className="top-banner-username">{user.name}</span>
+          <button onClick={handleLogout} className="btn-logout-top">退出</button>
+        </div>
+      </header>
 
-        <nav className="sidebar-nav">
-          {menuItems.map(item => (
-            <div
-              key={item.name}
-              className="sidebar-item-wrap"
-              onMouseEnter={() => setHoveredMenu(item.name)}
-              onMouseLeave={() => setHoveredMenu(null)}
-            >
-              <Link
-                href={item.path}
-                className={`sidebar-item${router.pathname === item.path ? ' active' : ''}`}
+      <div className="app-body">
+        {/* 侧边栏 */}
+        <aside className="sidebar">
+          <nav className="sidebar-nav">
+            {menuItems.map(item => (
+              <div
+                key={item.name}
+                className="sidebar-item-wrap"
+                onMouseEnter={() => setHoveredMenu(item.name)}
+                onMouseLeave={() => setHoveredMenu(null)}
               >
-                {item.name}
-              </Link>
-              {hoveredMenu === item.name && item.sub.length > 0 && (
-                <div className="sidebar-submenu">
-                  {item.sub.map(s => (
-                    <div key={s} className="sidebar-submenu-item">{s}</div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </nav>
+                <Link
+                  href={item.path}
+                  className={`sidebar-item${router.pathname === item.path ? ' active' : ''}`}
+                >
+                  {item.name}
+                </Link>
+                {hoveredMenu === item.name && item.sub.length > 0 && (
+                  <div className="sidebar-submenu">
+                    {item.sub.map(s => (
+                      <div key={s} className="sidebar-submenu-item">{s}</div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </nav>
 
-        <div className="sidebar-footer">
-          <div className="sidebar-user">
-            <div className="sidebar-user-avatar">{user.name?.[0] ?? '律'}</div>
-            <div>
-              <div className="sidebar-user-name">{user.name}</div>
-              <div className="sidebar-user-role">{user.role ?? '律师'}</div>
+          <div className="sidebar-footer">
+            <div className="sidebar-user">
+              <div className="sidebar-user-avatar">{user.name?.[0] ?? '律'}</div>
+              <div>
+                <div className="sidebar-user-name">{user.name}</div>
+                <div className="sidebar-user-role">{user.role ?? '律师'}</div>
+              </div>
             </div>
           </div>
-          <button onClick={handleLogout} className="btn-logout">退出登录</button>
-        </div>
-      </aside>
+        </aside>
 
-      {/* 主内容 */}
-      <main className="main-content">
-        {children}
-      </main>
+        {/* 主内容 */}
+        <main className="main-content">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
