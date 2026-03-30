@@ -59,43 +59,17 @@ export default function Home() {
             { role: 'system', content: '你是海南大成律师事务所的AI法律助手，专业、严谨、简洁地回答法律相关问题。' },
             ...history,
           ],
-          stream: true,
         }),
       });
 
       if (!res.ok) {
-        throw new Error(`API 错误: ${res.status}`);
+        const errText = await res.text();
+        throw new Error(`API 错误: ${res.status} — ${errText.slice(0, 120)}`);
       }
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let assistantContent = '';
-
-      setMessages(prev => [...prev, { role: 'assistant', content: '' }]);
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n');
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const data = line.slice(6).trim();
-          if (data === '[DONE]') break;
-          try {
-            const parsed = JSON.parse(data);
-            const delta = parsed.choices?.[0]?.delta?.content || '';
-            if (delta) {
-              assistantContent += delta;
-              setMessages(prev => {
-                const updated = [...prev];
-                updated[updated.length - 1] = { role: 'assistant', content: assistantContent };
-                return updated;
-              });
-            }
-          } catch {}
-        }
-      }
+      const data = await res.json();
+      const reply = data.choices?.[0]?.message?.content || '（无回复）';
+      setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
     } catch (err) {
       setMessages(prev => [...prev, { role: 'assistant', content: `请求失败：${err.message}` }]);
     } finally {
@@ -169,22 +143,14 @@ export default function Home() {
       </div>
 
       {/* 右侧滑出 AI 助手 */}
-      <div
-        className="ai-drawer-container"
-        onMouseLeave={() => setDrawerOpen(false)}
-      >
-        {/* Tab 标签 */}
-        <div
-          className="ai-drawer-tab"
-          onMouseEnter={() => setDrawerOpen(true)}
-          onClick={() => setDrawerOpen(v => !v)}
-        >
+      <div className={`ai-drawer-container${drawerOpen ? ' open' : ''}`}>
+        {/* Tab 标签 + 面板整体一起滑动 */}
+        <div className="ai-drawer-tab" onClick={() => setDrawerOpen(v => !v)}>
           <span className="ai-drawer-tab-icon">🤖</span>
           大成AI助手
         </div>
 
-        {/* 滑出面板 */}
-        <div className={`ai-drawer-panel${drawerOpen ? ' open' : ''}`}>
+        <div className="ai-drawer-panel">
           <div className="ai-drawer-header">
             <div className="ai-drawer-header-title">
               <span>🤖</span> 大成AI助手
