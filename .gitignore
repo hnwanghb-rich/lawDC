@@ -1,4 +1,7 @@
-node_modules/
+﻿node_modules/
 .env
 *.log
 .DS_Store
+
+
+❌ API Key 无效或未配置，请在设置页填写正确的 Key。
